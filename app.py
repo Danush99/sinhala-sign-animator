@@ -7,30 +7,14 @@ from nltk.tag import pos_tag
 from nltk.corpus import stopwords
 import os
 import fasttext
+from model import preprocess_and_predict
 
 app = Flask(__name__)
 
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
-# Set up Google Cloud credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'translate-key.json'  # Update this path
-
-model2 = fasttext.load_model('cc.en.300.bin')
-
-# Load the trained model
-model = joblib.load('rf.pkl')  # Assuming model.pkl is in the same directory as app.py
-
-# Initialize the translation client
-translate_client = translate.Client()
-
-def translate_text(text, target_language='en'):
-    result = translate_client.translate(text, target_language=target_language)
-    return result['translatedText']
 
 @app.route('/')
 def index():
+    preprocess_and_predict("The rabbit slept.")
     return render_template('index.html')
 
 @app.route('/translate', methods=['POST'])

@@ -116,9 +116,11 @@ def preprocess_and_predict(sentences):
         # Predict the sign for each word's embedding
         sentence_predictions = rf.predict(embeddings_df)
         predictions.append(sentence_predictions)
+    print(predictions)
 
     return predictions
-video_folder_path = '/content/drive/MyDrive/FYP-text-to-sign-conversion/Signs/'
+
+video_folder_path = '/Signs/'
 
 def generate_sign_language_video(sign_keys):
     video_files = [video_folder_path +  key + '.mkv' for key in sign_keys]
@@ -141,7 +143,7 @@ def generate_sign_language_video(sign_keys):
     final_clip = concatenate_videoclips(valid_clips)
 
     # Define the path for the output video in Google Drive
-    output_video_path = '/content/drive/MyDrive/FYP-text-to-sign-conversion/final_output.mp4' 
+    output_video_path = '/output/final_output.mp4' 
     
     # Write the result to the file in Google Drive
     final_clip.write_videofile(output_video_path)
