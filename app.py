@@ -2,11 +2,17 @@ from flask import Flask, render_template, request, jsonify
 from google.cloud import translate_v2 as translate
 import joblib
 import os
+from gensim.models.keyedvectors import KeyedVectors
 
 app = Flask(__name__)
 
 # Set up Google Cloud credentials
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'translate-key.json'  # Update this path
+
+
+# Load the FastText model
+model2 = KeyedVectors.load_word2vec_format('cc.en.300.bin', binary=True)
+
 
 # Load the trained model
 model = joblib.load('rf.pkl')  # Assuming model.pkl is in the same directory as app.py
