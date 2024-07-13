@@ -9,7 +9,7 @@ app = Flask(__name__)
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'translate-key.json'  # Update this path
 
 # Load the trained model
-model = joblib.load('model.pkl')  # Assuming model.pkl is in the same directory as app.py
+model = joblib.load('rf.pkl')  # Assuming model.pkl is in the same directory as app.py
 
 # Initialize the translation client
 translate_client = translate.Client()
@@ -33,9 +33,9 @@ def translate():
         processed_text = preprocess(english_text)
         
         # Predict tags
-        prediction = model.predict([processed_text])
+        # prediction = model.predict([processed_text])
         
-        return jsonify({'translatedText': english_text, 'prediction': prediction.tolist()})
+        return jsonify({'translatedText': english_text, 'prediction': '["Shani ❤️"]'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
