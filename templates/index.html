@@ -32,7 +32,6 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('translatedText').textContent = data.translatedText;
                 document.getElementById('prediction').textContent = data.prediction;
             })
             .catch(error => {

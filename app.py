@@ -9,9 +9,9 @@ def index():
 
 @app.route('/translate', methods=['POST'])
 def translate():
-    data = request.form['sinhala_text']
-    preprocess_and_predict(["The rabbit slept"])
-    print(data)
+    sinhala_text = request.form['sinhala_text']
+    prediction = preprocess_and_predict(sinhala_text)  
+    return jsonify({'prediction': prediction})  
 
 if __name__ == '__main__':
     app.run(debug=True)

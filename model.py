@@ -14,16 +14,19 @@ from nltk.corpus import stopwords
 from google.cloud import translate_v2 as translate
 from IPython.display import Video, display
 import joblib
+from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
-rf = joblib.load('rf.pkl') 
+keyPath = ''
 
-model = fasttext.load_model('cc.en.300.bin')
+rf = joblib.load(keyPath+'rf.pkl') 
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'translate-key.json' 
+model = fasttext.load_model(keyPath+'cc.en.300.bin')
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = keyPath+'translate-key.json' 
 
 def get_embedding(word):
     return model.get_word_vector(word)
@@ -65,6 +68,7 @@ def move_verb_to_end(sentence):
     return modified_sentence
 
 def translate_text(text, target_language='en'):
+    translate_client = translate.Client()
     result = translate_client.translate(text, target_language=target_language)
     return result['translatedText']
 
@@ -96,33 +100,13 @@ def remove_punctuation(sentence):
 
     return cleaned_sentence
 
-def preprocess_and_predict(sentences):
-    processed_sentences = []
-    for sentence in sentences:
-        sentence = preprocess_sentence(sentence)
-        sentence = move_verb_to_end(sentence)
-        sentence = remove_punctuation(sentence)
-        processed_sentences.append(sentence)
+video_folder_path = keyPath+'Signs/'
 
-    # Split each processed sentence into words and get embeddings
-    predictions = []
-    for sentence in processed_sentences:
-        words = sentence.split()
-        word_embeddings = [get_embedding(word) for word in words]
+def flatten_list(nested_list):
+    return [item for sublist in nested_list for item in sublist]
 
-        # Convert embeddings to DataFrame
-        embeddings_df = pd.DataFrame(word_embeddings)
-
-        # Predict the sign for each word's embedding
-        sentence_predictions = rf.predict(embeddings_df)
-        predictions.append(sentence_predictions)
-    print(predictions)
-
-    return predictions
-
-video_folder_path = '/Signs/'
-
-def generate_sign_language_video(sign_keys):
+def generate_sign_language_video(sign_keys_arrays):
+    sign_keys = flatten_list(sign_keys_arrays)
     video_files = [video_folder_path +  key + '.mkv' for key in sign_keys]
     valid_clips = []
 
@@ -143,13 +127,39 @@ def generate_sign_language_video(sign_keys):
     final_clip = concatenate_videoclips(valid_clips)
 
     # Define the path for the output video in Google Drive
-    output_video_path = '/output/final_output.mp4' 
+    output_video_path = keyPath+'output/final_output.mp4' 
     
     # Write the result to the file in Google Drive
     final_clip.write_videofile(output_video_path)
     
     # Display the video
     return output_video_path
-    
 
+def preprocess_and_predict(sinhalaText):
+  engText = translate_text(sinhalaText)
+  sentences = nltk.sent_tokenize(engText)
+  processed_sentences = []
+  for sentence in sentences:
+      sentence = preprocess_sentence(sentence)
+      sentence = move_verb_to_end(sentence)
+      sentence = remove_punctuation(sentence)
+      processed_sentences.append(sentence)
 
+  # Split each processed sentence into words and get embeddings
+  predictions = []
+  for sentence in processed_sentences:
+      words = sentence.split()
+      word_embeddings = [get_embedding(word) for word in words]
+
+      # Convert embeddings to DataFrame
+      embeddings_df = pd.DataFrame(word_embeddings)
+
+      # Predict the sign for each word's embedding
+      sentence_predictions = rf.predict(embeddings_df)
+      predictions.append(sentence_predictions)
+  
+  print(predictions)
+
+  generate_sign_language_video(predictions)
+
+  return "Successfully Stored the video"
