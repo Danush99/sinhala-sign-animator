@@ -1,18 +1,23 @@
 from flask import Flask, render_template, request, jsonify
 from google.cloud import translate_v2 as translate
 import joblib
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tag import pos_tag
+from nltk.corpus import stopwords
 import os
-from gensim.models.keyedvectors import KeyedVectors
+import fasttext
 
 app = Flask(__name__)
+
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 # Set up Google Cloud credentials
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'translate-key.json'  # Update this path
 
-
-# Load the FastText model
-model2 = KeyedVectors.load_word2vec_format('cc.en.300.bin', binary=True)
-
+model2 = fasttext.load_model('cc.en.300.bin')
 
 # Load the trained model
 model = joblib.load('rf.pkl')  # Assuming model.pkl is in the same directory as app.py
