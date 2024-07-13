@@ -1,5 +1,5 @@
-conda create --name signAnimation
-conda activate signAnimation
+virtualenv signAnimation
+.\signAnimation\Scripts\activate  
 pip install -r requirements.txt
 python -m nltk.downloader punkt
 python -m nltk.downloader stopwords
