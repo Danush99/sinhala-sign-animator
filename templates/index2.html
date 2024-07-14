@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinhala Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sinhala to English Translator</h1>
+        <form id="translateForm">
+            <textarea id="sinhalaText" name="sinhala_text" rows="4" cols="50" placeholder="Enter Sinhala text..."></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="output">
+            <h2>Translated Text:</h2>
+            <p id="translatedText"></p>
+            <h2>Prediction:</h2>
+            <p id="prediction"></p>
+        </div>
+        <h2>Video:</h2>
+        <video id="outputVideo" controls width="600">
+            <source id="videoSource" src="{{ url_for('serve_output_file', filename='final_output.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        document.getElementById('translateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/translate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('prediction').textContent = data.prediction;
+
+                var videoPath = '{{ url_for("serve_output_file", filename="final_output.mp4") }}';
+                var videoSource = document.getElementById('videoSource');
+                videoSource.src = videoPath;
+                document.getElementById('outputVideo').load();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
