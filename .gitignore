@@ -3,3 +3,5 @@ cc.en.300.bin
 translate-key.json
 gcv-env/
 signAnimation/
+output/
+__pycache__/
