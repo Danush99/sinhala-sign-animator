@@ -4,3 +4,4 @@ translate-key.json
 gcv-env/
 signAnimation/
 output/
+__pycache__/
