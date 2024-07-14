@@ -105,6 +105,12 @@ video_folder_path = keyPath+'Signs/'
 def flatten_list(nested_list):
     return [item for sublist in nested_list for item in sublist]
 
+def count_files_in_directory(directory):
+    count = 0
+    for _, _, files in os.walk(directory):
+        count += len(files)
+    return count
+
 def generate_sign_language_video(sign_keys_arrays):
     sign_keys = flatten_list(sign_keys_arrays)
     video_files = [video_folder_path +  key + '.mkv' for key in sign_keys]
@@ -126,14 +132,16 @@ def generate_sign_language_video(sign_keys_arrays):
     # Concatenate the valid clips
     final_clip = concatenate_videoclips(valid_clips)
 
-    # Define the path for the output video in Google Drive
-    output_video_path = keyPath+'output/final_output.mp4' 
+    directory = keyPath+'output/' 
+    file_count = count_files_in_directory(directory) + 1
+    video_name = f"output_{file_count}.mp4"
+    output_video_path = f"{keyPath}output/output_{file_count}.mp4"
     
     # Write the result to the file in Google Drive
     final_clip.write_videofile(output_video_path)
     
     # Display the video
-    return output_video_path
+    return video_name
 
 def preprocess_and_predict(sinhalaText):
   engText = translate_text(sinhalaText)
@@ -160,6 +168,6 @@ def preprocess_and_predict(sinhalaText):
   
   print(predictions)
 
-  generate_sign_language_video(predictions)
+  video_name = generate_sign_language_video(predictions)
 
-  return "Successfully Stored the video"
+  return video_name

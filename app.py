@@ -5,13 +5,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index1.html')
 
 @app.route('/translate', methods=['POST'])
 def translate():
     sinhala_text = request.form['sinhala_text']
-    prediction = preprocess_and_predict(sinhala_text)  
-    return jsonify({'prediction': prediction})  
+    video_name = preprocess_and_predict(sinhala_text)  
+    print("video name:: ",video_name)
+    return jsonify({'video_name': video_name})  
 
 @app.route('/output/<path:filename>')
 def serve_output_file(filename):

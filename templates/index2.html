@@ -8,25 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>Sinhala to English Translator</h1>
+        <h1>Sign Animator</h1>
         <form id="translateForm">
             <textarea id="sinhalaText" name="sinhala_text" rows="4" cols="50" placeholder="Enter Sinhala text..."></textarea>
             <br>
             <button type="submit">Submit</button>
         </form>
-        <div id="output">
-            <h2>Translated Text:</h2>
-            <p id="translatedText"></p>
-            <h2>Prediction:</h2>
-            <p id="prediction"></p>
-        </div>
         <h2>Video:</h2>
         <div class="single-explore-item">
             <div id="loadingIndicator" style="display: none;">
                 <p>Loading...</p>
             </div>
             <video id="outputVideo" controls style="display: none;">
-                <source id="videoSource" src="{{ url_for('serve_output_file', filename='output_1.mp4') }}" type="video/mp4">
+                <source id="videoSource" src="{{url_for('serve_output_file',filename='output_5.mp4')}}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>

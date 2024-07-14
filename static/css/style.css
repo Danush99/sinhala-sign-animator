@@ -814,6 +814,20 @@ video#outputVideo {
     margin-top: 28px;
 }/*subscribe-title*/
 
+.loader {
+    border: 15px solid #ff545a; /* Light grey */
+    border-top: 15px solid #3498db; /* Blue */
+    border-bottom: 15px solid #3498db; /* Blue */
+    border-radius: 30%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 
 /*custom-input-group*/
 .subscription-input-group {
